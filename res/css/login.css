@@ -1,0 +1,107 @@
+.login-form {
+		width: 340px;
+    	margin: 50px auto;
+	}
+    .addpost-top
+    {
+        margin-top:50px;
+    }
+    .head-bottom-line{
+        color: white;
+    font-size: small;
+    font-family: sans-serif;
+    }
+    .saathi-header{
+        margin: 0px auto;
+        text-align: center;
+        background-color: #01524B;
+        color: white;
+        padding-top: 5px;
+        padding-bottom: 20px;
+    }
+    .adpost-lbl-left{
+        text-align: left !important;
+    }
+    #saathiheadmain{
+        margin-top: 21px;
+        margin-bottom: 20px;
+    }
+    .addpost-button{
+        background-color: #2db34a;
+        color: white;
+        margin-top: 15px;
+    }
+    .login-form form {
+    	margin-bottom: 15px;
+        background: #f7f7f7;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+    .login-form h2 {
+        margin: 0 0 15px;
+    }
+    .form-control, .btn {
+        min-height: 38px;
+        border-radius: 2px;
+    }
+    .btn {        
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+   .main h3 {
+   	text-align: center;
+    margin-bottom: 30px;
+    margin-top: 10px;
+   }
+   .main table {
+   	 margin-top: 8px;
+    font-size: 13px;
+    padding-left: 18px;
+   }
+   .main .searchHead{
+    width:800px; 
+    margin:10px auto;
+   }
+  .main .searchHead input{
+    width: 79%;
+    margin-left: 16px;
+   }
+   
+
+   .main .divtable{
+    width:800px; 
+    margin:0 auto;
+   }
+
+   .saathi-head{
+       color:#333;
+   }
+   .saathi-subhead{
+        color: #2db34a;
+        font-weight: 500;
+        font-size: medium;
+   }
+   .search-box{
+        width: 50%;
+        padding: 0px;
+   }
+   .saathi-tabs{       
+       background-color: #59BD97;
+       border-bottom:1px solid #01524B;
+   }
+   .saathi-tabs  a{       
+       color:black;
+       color: inherit;
+   }
+   @media only screen and (max-width: 600px) {
+    .small-search {
+        display: none;
+    }
+    .head-mobile-width{
+        width:814px
+    }
+}
+
+
+      

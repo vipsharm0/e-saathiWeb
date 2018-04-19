@@ -1,0 +1,113 @@
+<script type="text/javascript">
+   /* $(function(){
+        console.log($('ul > li:first-child'))
+        $('ul > li:first-child').tab('show');
+    })*/
+</script>
+
+<div ng-controller="saathiCtrl" class="main">
+
+	<div class="page-header saathi-header head-mobile-width">
+		<h1>SAATHi</h1>
+		<div class="head-bottom-line">Spreading Animal Awareness Through Internet</div>
+	</div>
+
+	<ul class="nav nav-tabs saathi-tabs head-mobile-width" id="tabs">
+		<li class="active"><a data-toggle="pill" href="#Posts">Posts</a></li>
+		<li><a data-toggle="tab" href="#Faq">Faq</a></li>
+		<li><a data-toggle="tab" href="#Add">Add Post</a></li>
+	</ul>
+
+
+	<div class="tab-content" ng-view>
+
+		<div class="tab-pane active" id="Posts" class="tab-pane divtable" ng-if="viewData.length">
+			<div class="divtable ng-scope" ng-if="viewData.length">
+	  <!--<nav aria-label="Page navigation example">
+		  <ul class="pagination">
+		    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+		    <li class="page-item"><a class="page-link" href="#">1</a></li>
+		    <li class="page-item"><a class="page-link" href="#">2</a></li>
+		    <li class="page-item"><a class="page-link" href="#">3</a></li>
+		    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+		  </ul>
+	  </nav>-->
+	
+  </div>
+			<div class="searchHead">
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<div class="col-xs-12 col-md-12 search-box">
+							<input type="text" class="form-control" placeholder="Enter search Text" ng-model="searchKeyword">
+						</div>
+					</div>
+				</form>
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">S.No</th>
+								<th scope="col">Group Name</th>
+								<th scope="col">Post Published Date</th>
+								<th scope="col">Post</th>
+								<th scope="col">Posted By</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in viewData.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))  | filter: searchKeyword">
+								<td>{{data.sno}}</td>
+								<td>{{data.groupName}}</td>
+								<td>{{data.publishedDate}}</td>
+								<td><a target="_blank" href='{{data.postUrl}}'>{{data.postUrlText}}</a></td>
+								<td>{{data.user}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<pagination total-items="viewData.length" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
+			</div>
+		</div>
+
+		<div class="tab-pane" id="Faq" class="tab-pane divtable">
+			0000000000000000000
+		</div>
+		<div class="tab-pane" id="Add" class="tab-pane divtable">
+			<div class="container">
+				<form class="form-horizontal addpost-top" action="/action_page.php">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="email">Post Date:</label>
+						<div class="col-sm-10 col-md-3">
+							<input ng-model="postDate" type="text" class="form-control" id="pdate" placeholder="Post Date" name="pdate">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="email">Post catagory</label>
+						<div class="col-sm-10 col-md-3">
+							<select class="form-control" ng-model="selectedCatagory" ng-options="item.catagory for item in saathidata.catagories">
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="pwd">Name:</label>
+						<div class="col-sm-10 col-md-3">
+							<input ng-model="postedBy" type="text" class="form-control" id="pname" placeholder="Name" name="pname">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="pwd">Post Url:</label>
+						<div class="col-sm-10 col-md-3">
+							<input ng-model="postUrl" type="text" class="form-control" id="purl" placeholder="Post Url" name="purl">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="button" class="btn btn-default addpost-button" ng-click="submitPost()">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+
+</div>
