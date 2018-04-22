@@ -1,4 +1,4 @@
-var app = angular.module('saathiApp', ['ui.bootstrap']);
+var app = angular.module('saathiApp', ['ui.bootstrap', 'ngMessages']);
 
 app.factory('saathiService', function ($http, $q) {
 
@@ -17,26 +17,40 @@ app.factory('saathiService', function ($http, $q) {
 			return def.promise;
 		},
 
-        post: function (postData) {
-            var def = $q.defer();
-            var post = {};
-            post.postDate = postData.postDate;
-            post.postedBy = postData.postedBy;
-            post.postUrl = postData.postUrl;
-            post.catagory = postData.catagory;
-            $http({
-                url: 'http://localhost:63472/api/post',
-                method: "POST",
+		getPosts: function () {
+			var def = $q.defer();
+			$http({
+				method: 'GET',
+				url: 'http://localhost:63472/api/post'
+			}).then(function (response) {
+				def.resolve(response);
+			}, function (error) {
+				def.reject("Failed to get albums");
+			});
+			return def.promise;
+		},
+
+		post: function (postData) {
+			var def = $q.defer();
+			var post = {};
+			post.postDate = postData.postDate;
+			post.postedBy = postData.postedBy;
+			post.postUrl = postData.postUrl;
+			post.catagory = postData.catagory;
+			post.group = postData.group;
+			$http({
+				url: 'http://localhost:63472/api/post',
+				method: "POST",
 				dataType: "json",
-                data: JSON.stringify(post),
-                ContentType: 'application/json'
-            }).then(function (data, status, headers, config) {
-                 def.resolve(data); 
-            }).then(function (data, status, headers, config) {
-                def.reject("Failed to get albums");
-            });
-            return def.promise;
-        }
+				data: JSON.stringify(post),
+				ContentType: 'application/json'
+			}).then(function (data, status, headers, config) {
+				def.resolve(data);
+			}).then(function (data, status, headers, config) {
+				def.reject("Failed to get albums");
+			});
+			return def.promise;
+		}
 	}
 
 })
@@ -47,7 +61,9 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', function
 	$scope.currentPage = 1;
 	$scope.itemsPerPage = 4;
 
-
+	$("#datepicker").datepicker({
+		dateFormat: "yy-mm-dd"
+	});
 	$scope.getUnique = function (inputArray) {
 		var outputArray = [];
 
@@ -119,26 +135,51 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', function
 		});
 	}
 
-	$scope.getSheets();
+	//$scope.getSheets();
 
+
+	$scope.dataSaathi = {};
 	$scope.saathiData = function () {
-		var promises = [saathiService.catagories()];
+		var promises = [saathiService.catagories(), saathiService.getPosts()];
 		$q.all(promises).then(function (response) {
-			$scope.saathidata.catagories = response[0].data;
+			$scope.dataSaathi.catagories = response[0].data;
+			$scope.viewData = response[1].data;
+			var filtered = [];
+			for (var i = 0; i < $scope.viewData.length; i++) {
+				if ($scope.viewData[i].catagory == 0) {
+					$scope.viewData[i].catagory = 'Misc';
+				} else {
+					for (var c = 0; c < $scope.dataSaathi.catagories.length; c++) {
+						if ($scope.viewData[i].catagory == $scope.dataSaathi.catagories[c].Id) {
+							$scope.viewData[i].catagory = $scope.dataSaathi.catagories[c].catagory;
+						}
+					}
+				}
+
+
+			}
 		}, function () {
 			$scope.saathidata.error = "error";
 		})
 	}
 
-	$scope.submitPost = function(){
+	$scope.replacecatagory = function (obj) {
+		var viewDataObject = obj;
+		var catagoryObj = $scope.dataSaathi.catagories.filter(item => item.Id == parseInt(obj.catagory))
+		obj.catagory = catagoryObj[0].catagory;
+		return obj;
+	}
+	$scope.submitPost = function () {
 		var post = {};
 		post.postDate = $scope.postDate;
 		post.postedBy = $scope.postedBy;
 		post.postUrl = $scope.postUrl;
-		post.catagory = $scope.selectedCatagory.catagory;
-		saathiService.post(post).then(function(response){
-			var cc= response;
-		}, function(){
+		post.catagory = $scope.dataSaathi.catagory;
+		post.group = $scope.groupName;
+		saathiService.post(post).then(function (response) {
+			var cc = response;
+			$('#tabs a[href="#Posts"]').tab('show');
+		}, function () {
 			$scope.saathidata.error = "error";
 		})
 

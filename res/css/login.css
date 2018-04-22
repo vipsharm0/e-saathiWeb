@@ -94,6 +94,9 @@
        color:black;
        color: inherit;
    }
+   .saathiError{
+       color:red;
+   }
    @media only screen and (max-width: 600px) {
     .small-search {
         display: none;

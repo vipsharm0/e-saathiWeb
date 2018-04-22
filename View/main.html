@@ -23,7 +23,7 @@
 
 		<div class="tab-pane active" id="Posts" class="tab-pane divtable" ng-if="viewData.length">
 			<div class="divtable ng-scope" ng-if="viewData.length">
-	  <!--<nav aria-label="Page navigation example">
+				<!--<nav aria-label="Page navigation example">
 		  <ul class="pagination">
 		    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
 		    <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -32,8 +32,8 @@
 		    <li class="page-item"><a class="page-link" href="#">Next</a></li>
 		  </ul>
 	  </nav>-->
-	
-  </div>
+
+			</div>
 			<div class="searchHead">
 				<form class="form-horizontal" role="form">
 					<div class="form-group">
@@ -46,8 +46,8 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th scope="col">S.No</th>
 								<th scope="col">Group Name</th>
+								<th scope="col">Catagory</th>
 								<th scope="col">Post Published Date</th>
 								<th scope="col">Post</th>
 								<th scope="col">Posted By</th>
@@ -55,11 +55,11 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="data in viewData.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))  | filter: searchKeyword">
-								<td>{{data.sno}}</td>
-								<td>{{data.groupName}}</td>
-								<td>{{data.publishedDate}}</td>
-								<td><a target="_blank" href='{{data.postUrl}}'>{{data.postUrlText}}</a></td>
-								<td>{{data.user}}</td>
+								<td>{{data.group}}</td>
+								<td>{{data.catagory}}</td>
+								<td>{{data.postDate}}</td>
+								<td><a target="_blank" href='{{data.postUrl}}'>View Post</a></td>
+								<td>{{data.postedBy}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -73,33 +73,45 @@
 		</div>
 		<div class="tab-pane" id="Add" class="tab-pane divtable">
 			<div class="container">
-				<form class="form-horizontal addpost-top" action="/action_page.php">
+				<form class="form-horizontal addpost-top" name="postForm">
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="email">Post Date:</label>
 						<div class="col-sm-10 col-md-3">
-							<input ng-model="postDate" type="text" class="form-control" id="pdate" placeholder="Post Date" name="pdate">
+							<input id="datepicker" readonly type="text" ng-model="postDate" class="form-control" placeholder="Post Date">
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="email">Post catagory</label>
 						<div class="col-sm-10 col-md-3">
-							<select class="form-control" ng-model="selectedCatagory" ng-options="item.catagory for item in saathidata.catagories">
+							<select class="form-control" ng-model="dataSaathi.catagory" ng-options="item.Id as item.catagory for item in dataSaathi.catagories track by item.Id">
+								<option value="" selected="selected">Misc</option>
 							</select>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-sm-2" for="pwd">Name:</label>
+						<label class="control-label col-sm-2" for="pwd">Posted By:</label>
 						<div class="col-sm-10 col-md-3">
 							<input ng-model="postedBy" type="text" class="form-control" id="pname" placeholder="Name" name="pname">
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-sm-2" for="pwd">Post Url:</label>
+						<label class="control-label col-sm-2" for="pwd">Group Name:</label>
 						<div class="col-sm-10 col-md-3">
-							<input ng-model="postUrl" type="text" class="form-control" id="purl" placeholder="Post Url" name="purl">
+							<input ng-model="groupName" type="text" class="form-control" placeholder="Group Name"
+								name="groupname">							
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group" ng-class="{ 'has-error': postForm.purl.$touched && postForm.purl.$invalid }">
+						<label class="control-label col-sm-2" for="pwd">Post Url:</label>
+						<div class="col-sm-10 col-md-4">
+							<input required ng-model="postUrl" type="text" class="form-control" id="purl" placeholder="Post Url" name="purl">
+							
+						</div>
+						<div ng-messages="postForm.purl.$error" ng-show="postForm.purl.$touched">
+								<p class="saathiError" ng-message="required">Post url is required.</p>
+							</div>
+					</div>
+					<div ng-disabled="true" class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="button" class="btn btn-default addpost-button" ng-click="submitPost()">Submit</button>
 						</div>
