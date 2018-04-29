@@ -1,65 +1,12 @@
 var app = angular.module('saathiApp', ['ui.bootstrap', 'ngMessages']);
 
-app.factory('saathiService', function ($http, $q) {
 
-	var returnData = {};
-	return {
-		catagories: function () {
-			var def = $q.defer();
-			$http({
-				method: 'GET',
-				url: 'http://localhost:63472/api/catagory'
-			}).then(function (response) {
-				def.resolve(response);
-			}, function (error) {
-				def.reject("Failed to get albums");
-			});
-			return def.promise;
-		},
 
-		getPosts: function () {
-			var def = $q.defer();
-			$http({
-				method: 'GET',
-				url: 'http://localhost:63472/api/post'
-			}).then(function (response) {
-				def.resolve(response);
-			}, function (error) {
-				def.reject("Failed to get albums");
-			});
-			return def.promise;
-		},
-
-		post: function (postData) {
-			var def = $q.defer();
-			var post = {};
-			post.postDate = postData.postDate;
-			post.postedBy = postData.postedBy;
-			post.postUrl = postData.postUrl;
-			post.catagory = postData.catagory;
-			post.group = postData.group;
-			$http({
-				url: 'http://localhost:63472/api/post',
-				method: "POST",
-				dataType: "json",
-				data: JSON.stringify(post),
-				ContentType: 'application/json'
-			}).then(function (data, status, headers, config) {
-				def.resolve(data);
-			}).then(function (data, status, headers, config) {
-				def.reject("Failed to get albums");
-			});
-			return def.promise;
-		}
-	}
-
-})
-
-app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', function (saathiService, $scope, $http, $q) {
+app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', '$timeout', function (saathiService, $scope, $http, $q, $timeout) {
 
 	$scope.saathidata = {};
 	$scope.currentPage = 1;
-	$scope.itemsPerPage = 4;
+	$scope.itemsPerPage = 6;
 
 	$("#datepicker").datepicker({
 		dateFormat: "yy-mm-dd"
@@ -140,8 +87,12 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', function
 
 	$scope.dataSaathi = {};
 	$scope.saathiData = function () {
+		$scope.showLoader = true;
+		$scope.showdata = false;
 		var promises = [saathiService.catagories(), saathiService.getPosts()];
 		$q.all(promises).then(function (response) {
+			$scope.showLoader = false;
+			$scope.showdata = true
 			$scope.dataSaathi.catagories = response[0].data;
 			$scope.viewData = response[1].data;
 			var filtered = [];
@@ -158,6 +109,7 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', function
 
 
 			}
+
 		}, function () {
 			$scope.saathidata.error = "error";
 		})
@@ -169,16 +121,24 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', function
 		obj.catagory = catagoryObj[0].catagory;
 		return obj;
 	}
-	$scope.submitPost = function () {
+	$scope.submitPost = function (form) {
 		var post = {};
 		post.postDate = $scope.postDate;
 		post.postedBy = $scope.postedBy;
 		post.postUrl = $scope.postUrl;
 		post.catagory = $scope.dataSaathi.catagory;
 		post.group = $scope.groupName;
+		$scope.reset();
 		saathiService.post(post).then(function (response) {
-			var cc = response;
-			$('#tabs a[href="#Posts"]').tab('show');
+			if (response.data == '1') {
+				$('#tabs a[href="#Posts"]').tab('show');
+				$scope.saathiData();
+				$scope.success = "A new post has been submitted"
+				$timeout(function () {
+					$scope.success = null;
+				}, 4000);
+			}
+
 		}, function () {
 			$scope.saathidata.error = "error";
 		})
@@ -187,7 +147,18 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', function
 
 	$scope.saathiData();
 
+	$scope.reset = function () {
+		$scope.postUrl = "";
+		$scope.postedBy = "";
+		$scope.viewData[0].catagory = 'Misc';
+		$scope.groupName = "";
+		$scope.postDate = "";
+		$scope.postForm.$setPristine();
+		$scope.postForm.$setUntouched();
+	}
+
 }]);
+
 
 app.filter('startFrom', function () {
 	return function (data, start) {
