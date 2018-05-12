@@ -36,7 +36,7 @@
 					</div>
 				</form>
 
-				<div class="table-responsive col-md-10 col-xs-2">
+				<div class="table-responsive col-md-11 col-xs-2">
 					<table class="table">
 						<thead>
 							<tr>
@@ -45,6 +45,7 @@
 								<th scope="col">Post Published Date</th>
 								<th scope="col">Post</th>
 								<th scope="col">Posted By</th>
+								<th scope="col">Actions</th>
 							</tr>
 						</thead>
 						<div ng-if="showdata" class="animate-bottom">
@@ -55,6 +56,10 @@
 									<td>{{data.postDate | date:'MMMM dd, yyyy'}}</td>
 									<td><a target="_blank" href='{{data.postUrl}}'>View Post</a></td>
 									<td>{{data.postedBy}}</td>
+									<td>
+										<img ng-click="open(data)" style="height:18px;width:24px;cursor: pointer; margin-right: 5px;" title="Edit" src="../images/edit.png" alt="Edit">
+										<img style="height:18px;width:24px;cursor: pointer;" title="Delete" src="../images/delete.png" alt="Delete">
+									</td>
 								</tr>
 							</tbody>
 						</div>
@@ -63,7 +68,7 @@
 
 			</div>
 			<diV class="dtp-search-paging">
-				<pagination total-items="viewData.length" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></pagination>
+				<uib-pagination total-items="viewData.length" ng-model="currentPage" ng-change="pageChanged()" class="pagination-sm" items-per-page="itemsPerPage"></uib-pagination>
 			</diV>
 		</div>
 

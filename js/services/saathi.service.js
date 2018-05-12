@@ -6,7 +6,8 @@ app.factory('saathiService', function ($http, $q) {
 			var def = $q.defer();
 			$http({
 				method: 'GET',
-				url: 'http://localhost:63472/api/catagory'
+				//url: 'http://localhost:63472/api/catagory'
+                url: 'http://esaathi.saathi.net.in/api/catagory'
 			}).then(function (response) {
 				def.resolve(response);
 			}, function (error) {
@@ -19,7 +20,8 @@ app.factory('saathiService', function ($http, $q) {
 			var def = $q.defer();
 			$http({
 				method: 'GET',
-				url: 'http://localhost:63472/api/post'
+				//url: 'http://localhost:63472/api/post'
+                url: 'http://esaathi.saathi.net.in/api/post'
 			}).then(function (response) {
 				def.resolve(response);
 			}, function (error) {
@@ -37,7 +39,8 @@ app.factory('saathiService', function ($http, $q) {
 			post.catagory = postData.catagory;
 			post.group = postData.group;
 			$http({
-				url: 'http://localhost:63472/api/post',
+				//url: 'http://localhost:63472/api/post',
+                url: 'http://esaathi.saathi.net.in/api/post',
 				method: "POST",
 				dataType: "json",
 				data: JSON.stringify(post),

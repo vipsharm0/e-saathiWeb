@@ -1,8 +1,36 @@
-var app = angular.module('saathiApp', ['ui.bootstrap', 'ngMessages']);
+var app = angular.module('saathiApp', ['ngAnimate','ngSanitize','ui.bootstrap', 'ngMessages'])
+.controller('modalInstanceCtrl', ['$filter','editData','$scope','catagories',  function($filter,editData, $scope, catagories){
+	
+	$(function() {
+		$("body").delegate(".datepicker", "focusin", function(){
+			$(this).datepicker();
+		});
+	});
+	
+	$scope.catagoryOptions = catagories;
+	$scope.catagoryOptions.push({Id:0, catagory: "Misc"});
+	angular.forEach($scope.catagoryOptions, function(catagory){
+		if(catagory.catagory == editData.catagory){
+			if(editData.catagory == 'Misc'){
+				$scope.catagory1 = 0;
+			}else{
+				$scope.catagory1 = catagory.Id;
+			}
+			
+		}
+	})
+	$scope.postDate=$filter('date')(editData.postDate, 'MM/dd/yyyy');;
+	$scope.postedBy = editData.postedBy;
+	$scope.groupName = editData.group;
+	$scope.postUrl = editData.postUrl;
 
 
-
-app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', '$timeout', function (saathiService, $scope, $http, $q, $timeout) {
+	$scope.updatePost = function(){
+		
+	}
+	
+}])
+.controller('saathiCtrl', ['$uibModal','saathiService', '$scope', '$http', '$q', '$timeout', function ($uibModal,saathiService, $scope, $http, $q, $timeout) {
 
 	$scope.saathidata = {};
 	$scope.currentPage = 1;
@@ -22,68 +50,6 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', '$timeou
 
 		return outputArray;
 	}
-
-	$scope.getSheets = function () {
-		var mainUrl = "https://spreadsheets.google.com/feeds/list/",
-			sheetId = "1KB-xw6t5b9wILjpZEZidSVJYmuT_GyNb2WEhg3RDkwU",
-			lastUrl = "/od6/public/values?alt=json",
-			finalUrl = mainUrl + sheetId + lastUrl;
-
-		$scope.saathiSheets = [];
-		$scope.viewData = [];
-
-		$http({
-			method: "GET",
-			url: finalUrl
-		}).then(function mySuccess(response) {
-			var allData, sheetIds = [], uniqueSheets = [];
-			allData = response.data.feed.entry;
-			allData.forEach(function (currentValue, index, arr) {
-				var sheetId = currentValue.gsx$sheetid.$t;
-				sheetIds.push(sheetId);
-				//$scope.saathiSheets.push( $http.get(mainUrl + sheetId + lastUrl));
-			})
-
-			uniqueSheets = $scope.getUnique(sheetIds);
-
-			uniqueSheets.forEach(function (currentValue, index, arr) {
-				var sheetId = currentValue;
-				$scope.saathiSheets.push($http.get(mainUrl + sheetId + lastUrl));
-			})
-
-			$q.all($scope.saathiSheets).then(function (response) {
-				var idx = 1;
-				for (var count = 0; count < response.length; count++) {
-					var allData = response[count].data.feed.entry;
-					allData.forEach(function (currentValue, index, arr) {
-						var groupIndex, urlIndex, sheetData = {};
-
-						sheetData.sno = idx;
-						sheetData.groupName = currentValue.gsx$groupname.$t;
-						sheetData.publishedDate = currentValue.gsx$publishedon.$t;
-						sheetData.postUrlText = 'View Post';
-						sheetData.postUrl = currentValue.gsx$post.$t;
-						sheetData.user = currentValue.gsx$user.$t;
-
-						/*groupIndex = sheetData.groupName.indexOf("(http");
-						sheetData.groupName = (groupIndex != -1)? sheetData.groupName.slice(0, groupIndex):"";
-
-						urlIndex = sheetData.postUrl.indexOf("(http");
-						sheetData.postUrl = (groupIndex != -1)? sheetData.postUrl.slice(urlIndex +1 , sheetData.postUrl.length-6):"";
-*/
-						$scope.viewData.push(sheetData);
-						idx++;
-					})
-				}
-				console.log(response);
-			});
-		}, function myError(response) {
-			$scope.error = "fatal error occured";
-		});
-	}
-
-	//$scope.getSheets();
-
 
 	$scope.dataSaathi = {};
 	$scope.saathiData = function () {
@@ -127,11 +93,11 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', '$timeou
 		post.postedBy = $scope.postedBy;
 		post.postUrl = $scope.postUrl;
 		post.catagory = $scope.dataSaathi.catagory;
-		post.group = $scope.groupName;
-		$scope.reset();
+		post.group = $scope.groupName;	
+		$('#tabs a[href="#Posts"]').tab('show');	
 		saathiService.post(post).then(function (response) {
 			if (response.data == '1') {
-				$('#tabs a[href="#Posts"]').tab('show');
+				$scope.reset();				
 				$scope.saathiData();
 				$scope.success = "A new post has been submitted"
 				$timeout(function () {
@@ -156,6 +122,34 @@ app.controller('saathiCtrl', ['saathiService', '$scope', '$http', '$q', '$timeou
 		$scope.postForm.$setPristine();
 		$scope.postForm.$setUntouched();
 	}
+
+	$scope.open = function (data) {
+		
+		var modalInstance = $uibModal.open({
+		  animation: true,
+		  ariaLabelledBy: 'modal-title',
+		  ariaDescribedBy: 'modal-body',
+		  templateUrl: 'editPost.html',
+		  scope:$scope,
+		  controller: 'modalInstanceCtrl',
+		  //controllerAs: '$saathiCtrl',
+		  size: "md",
+		  resolve: {
+			editData: function () {
+			  return data;
+			},
+			catagories: function(){
+				return $scope.dataSaathi.catagories
+			}
+		  }
+		});
+	
+		modalInstance.result.then(function (selectedItem) {
+		  //$ctrl.selected = selectedItem;
+		}, function () {
+		  //$log.info('Modal dismissed at: ' + new Date());
+		});
+	};
 
 }]);
 
