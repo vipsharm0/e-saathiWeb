@@ -38,6 +38,8 @@ app.factory('saathiService', function ($http, $q) {
 			post.postUrl = postData.postUrl;
 			post.catagory = postData.catagory;
 			post.group = postData.group;
+			post.edit = postData.edit;
+			post.Id = postData.Id;
 			$http({
 				//url: 'http://localhost:63472/api/post',
                 url: 'http://esaathi.saathi.net.in/api/post',

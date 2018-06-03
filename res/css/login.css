@@ -22,7 +22,7 @@
         padding-top: 5px;
         padding-bottom: 20px;
     }
-
+   
     .edit-post{
         height: 18px !important;
         width: 24px !important;
@@ -91,9 +91,10 @@
         font-size: medium;
    }
    .search-box{
-        width: 50%;
-        padding-top: 3%;
-        width: 100%;
+    padding-top: 2%;
+    margin: 0px auto;
+    width: 30%;
+    float: none;
    }
    .active .dtp-search{
        margin-left: 0px;
@@ -115,9 +116,20 @@
    .saathiError{
        color:red;
    }
-  
-   
-   @media only screen and (max-width: 750px) {
+   .dtpCol{
+       padding-left:0px !important;
+   }
+   .dtpfiltersel{
+    border: none;
+    box-shadow: none;
+   }
+   .saathi-col{
+    width:17%
+   }
+   .saathi-table{
+        max-width: none;
+    }
+   @media only screen and (max-width: 666px) {
     /*body{
         background-color:lightyellow;
     }*/
@@ -130,6 +142,9 @@
    .active .dtp-search-paging{
        margin-left: 0px;
    }
+   .mob-showhide{
+        display: none;
+    }
     /*.small-search {
         display: none;
     }*/

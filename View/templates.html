@@ -1,9 +1,22 @@
+<script type="text/ng-template" id="deletePost.html">
+    <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Archive Post</h3>
+	</div>
+	<div class="modal-body" id="modal-body">
+		Do you want to archive  this post?
+	</div>
+	<div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="deletePost()">Yes</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
 <script type="text/ng-template" id="editPost.html">
     <div class="modal-header">
         <h3 class="modal-title" id="modal-title">Edit Post</h3>
     </div>
     <div class="modal-body" id="modal-body">
-            <form class="form-horizontal addpost-top" name="postForm" ng-submit="submitPost(postForm)" novalidate>
+            <form class="form-horizontal addpost-top" name="postForm" ng-submit="updatePost(postForm)" novalidate>
 					<div class="form-group">
 						<label class="control-label col-sm-2 col-md-3" for="email">Post Date:</label>
 						<div class="col-sm-10 col-md-8">
@@ -13,7 +26,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2 col-md-3" for="email">Post catagory</label>
 						<div class="col-sm-10 col-md-8">
-							<select class="form-control" ng-model="catagory1" ng-options="item.Id as item.catagory for item in catagoryOptions">
+							<select class="form-control" ng-model="editCatagory" ng-options="item.Id as item.catagory for item in catagoryOptions">
 							</select>
 						</div>
 					</div>
@@ -41,7 +54,7 @@
 					<div ng-disabled="true" class="form-group">
 						<div class="col-sm-offset-3 col-md-offset-4 col-sm-10" ng-disabled="postForm.$invalid">
 							<button type="submit" class="btn btn-success" ng-disabled="postForm.$invalid">Submit</button>
-							<span class="editCancel"><button type="button" class="btn btn-warning">Cancel</button></span>
+							<span class="editCancel"><button ng-click="cancel()" type="button" class="btn btn-warning">Cancel</button></span>
 						</div>
 					</div>
 				</form>
