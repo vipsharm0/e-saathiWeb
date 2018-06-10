@@ -30,6 +30,20 @@ app.factory('saathiService', function ($http, $q) {
 			return def.promise;
 		},
 
+		getSubCatagories: function () {
+			var def = $q.defer();
+			$http({
+				method: 'GET',
+				//url: 'http://localhost:63472/api/subcatagory'
+                url: 'http://esaathi.saathi.net.in/api/subcatagory'
+			}).then(function (response) {
+				def.resolve(response);
+			}, function (error) {
+				def.reject("Failed to get subcatagory");
+			});
+			return def.promise;
+		},
+
 		post: function (postData) {
 			var def = $q.defer();
 			var post = {};
@@ -37,6 +51,7 @@ app.factory('saathiService', function ($http, $q) {
 			post.postedBy = postData.postedBy;
 			post.postUrl = postData.postUrl;
 			post.catagory = postData.catagory;
+			post.subCatagory = postData.subCatagory;
 			post.group = postData.group;
 			post.edit = postData.edit;
 			post.Id = postData.Id;

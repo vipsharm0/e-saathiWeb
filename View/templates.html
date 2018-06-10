@@ -26,7 +26,14 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2 col-md-3" for="email">Post catagory</label>
 						<div class="col-sm-10 col-md-8">
-							<select class="form-control" ng-model="editCatagory" ng-options="item.Id as item.catagory for item in catagoryOptions">
+							<select class="form-control" ng-change = "changeSubCatagory()" ng-model="editCatagory" ng-options="item.Id as item.catagory for item in catagoryOptions">
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2 col-md-3" for="email">Sub catagory</label>
+						<div class="col-sm-10 col-md-8">
+							<select class="form-control" ng-model="editSubCatagory" ng-options="item.Id as item.catagory for item in subCatagoryOptions">
 							</select>
 						</div>
 					</div>

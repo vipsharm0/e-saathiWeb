@@ -123,16 +123,35 @@
     border: none;
     box-shadow: none;
    }
-   .saathi-col{
-    width:17%
+   .saathi-col1{
+    width:20%
    }
+   .saathi-col2{
+    width:20%
+   }
+   .saathi-col3{
+    width:20%
+   }
+   .saathi-col4{
+    width:10%
+   }
+   .saathi-col5{
+    width:10%
+   }
+   .saathi-col6{
+    width:20%
+   }
+ 
    .saathi-table{
         max-width: none;
     }
-   @media only screen and (max-width: 666px) {
+   @media only screen and (max-width: 500px) {
     /*body{
         background-color:lightyellow;
     }*/
+    .search-box {
+        width: 100%;
+    }
     .active .dtp-search{
        margin-left: -15px;
    }

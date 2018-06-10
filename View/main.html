@@ -30,7 +30,7 @@
 					</div>
 				</form>
 
-				<div class="saathi-table table-responsive col-md-11 col-xs-2">
+				<div class="saathi-table table-responsive col-md-11 col-xs-2" style="overflow-x:auto;">
 					<table class="table">
 						<thead>
 							<tr>
@@ -40,29 +40,32 @@
 									</select>
 								</th>
 								<th scope="col" class="mob-showhide">
-									<select ng-change = "resetFilters()" class="form-control" ng-model="catagorySearch" ng-options="item.catagory as item.catagory for item in dataSaathi.catagories track by item.Id">
-										<option value="" selected="selected">Catagory</option>
-									</select>
-								</th>
-								<th scope="col" class="mob-showhide">
 									<select ng-change = "resetFilters()" class="form-control" ng-model="postedBySearch" ng-options="item as item for item in filter.postedBy track by item">
 										<option value="" selected="selected">Posted By</option>
 									</select>
 								</th>
-								<th scope="col" class="mob-showhide">Post Published Date</th>
-								<th scope="col">Post</th>							
+								<th scope="col" class="mob-showhide">
+									<select ng-change = "resetFilters()" class="form-control" ng-model="catagorySearch" ng-options="item.catagory as item.catagory for item in dataSaathi.catagories track by item.Id">
+										<option value="" selected="selected">Catagory</option>
+									</select>
+								</th>
+								<th scope="col" class="mob-showhide">Sub Catagory</th>
+								<th scope="col" class="mob-showhide">Date</th>
+								<!--<th scope="col">Post</th>							-->
 								<th scope="col">Actions</th>
 							</tr>
 						</thead>
 						<div ng-if="showdata" class="animate-bottom">
 							<tbody>
 								<tr ng-repeat="data in viewData.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter: searchKeyword | searchBy:groupSearch:catagorySearch:postedBySearch track by $index">
-									<td class="saathi-col">{{data.group}}</td>
-									<td class="saathi-col mob-showhide">{{data.catagory}}</td>
-									<td class="saathi-col mob-showhide">{{data.postedBy}}</td>
-									<td class="saathi-col mob-showhide">{{data.postDate | date:'MMMM dd, yyyy'}}</td>
-									<td class="saathi-col"><a target="_blank" href='{{data.postUrl}}'>View Post</a></td>									
-									<td>
+									<td class="saathi-col1">{{data.group}}</td>
+									<td class="saathi-col2 mob-showhide">{{data.postedBy}}</td>
+									<td class="saathi-col3 mob-showhide">{{data.catagory}}</td>
+									<td class="saathi-col4 mob-showhide">{{data.subCatagory}}</td>
+									<td class="saathi-col5 mob-showhide">{{data.postDate | date:'MMMM dd, yyyy'}}</td>
+									<!--<td class="saathi-col"><a target="_blank" href='{{data.postUrl}}'>View Post</a></td>-->
+									<td class="saathi-col6">
+										<a target="_blank" href='{{data.postUrl}}'><img style="height:18px;width:24px;cursor: pointer; margin-right: 10px;" title="Delete" src="../images/w.png" alt="Delete"></a>											
 										<img ng-click="open(data)" style="height:18px;width:24px;cursor: pointer; margin-right: 10px;" title="Edit" src="../images/edit.png" alt="Edit">
 										<img ng-click="delete(data)" style="height:18px;width:24px;cursor: pointer;" title="Delete" src="../images/delete.png" alt="Delete">
 									</td>
@@ -94,6 +97,14 @@
 						<label class="control-label col-sm-2" for="email">Post catagory</label>
 						<div class="col-sm-10 col-md-3">
 							<select class="form-control" ng-model="dataSaathi.catagory" ng-options="item.Id as item.catagory for item in dataSaathi.catagories track by item.Id">
+								<option value="" selected="selected">Misc</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group" ng-if="dataSaathi.subCatagories">
+						<label class="control-label col-sm-2" for="email">Sub catagory</label>
+						<div class="col-sm-10 col-md-3">
+							<select class="form-control" ng-model="dataSaathi.subCatagory" ng-options="item.Id as item.catagory for item in dataSaathi.subCatagories track by item.Id">
 								<option value="" selected="selected">Misc</option>
 							</select>
 						</div>

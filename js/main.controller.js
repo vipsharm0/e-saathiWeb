@@ -5,7 +5,7 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 			var options = [];
 			for (var i = 0; i < items.length; i++) {
 				var groupItem = items[i].group;
-				var groupItem = group? items[i].group:items[i].postedBy;
+				var groupItem = group ? items[i].group : items[i].postedBy;
 				if ((jQuery.inArray(groupItem, options)) == -1) {
 					options.push(groupItem);
 				}
@@ -18,9 +18,9 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 	.filter('searchBy', function () {
 		return function (items, groupSearch, catagorySearch, postedBySearch) {
 			var filtered = [], groupSearchCondition, catagorySearchCondition,
-			postedBySearchCondition;
+				postedBySearchCondition;
 
-			
+
 			/*for (var i = 0; i < items.length; i++) {
 				var item = items[i];
 				if (groupSearch != '' && groupSearch != undefined) {
@@ -42,7 +42,7 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 				//filtered.push(item);
 				//}
 			}*/
-			var filtter = items.filter(function(item){
+			var filtter = items.filter(function (item) {
 				if (groupSearch != '' && groupSearch != undefined) {
 					groupSearchCondition = (item.group == groupSearch);
 				}
@@ -53,8 +53,8 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 					postedBySearchCondition = (item.postedBy == postedBySearch)
 				}
 				return groupSearchCondition ||
-					   catagorySearchCondition ||
-					   postedBySearchCondition;
+					catagorySearchCondition ||
+					postedBySearchCondition;
 			})
 			if (filtter.length == 0) {
 				filtter = items;
@@ -63,8 +63,8 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 		};
 	})
 
-	.controller('modalInstanceCtrl', ['$timeout', '$rootScope', 'saathiService', 'editOpen', 'delOpen', 'delData', '$uibModalInstance', '$filter', 'editData', '$scope', 'catagories',
-		function ($timeout, $rootScope, saathiService, editOpen, delOpen, delData, $uibModalInstance, $filter, editData, $scope, catagories) {
+	.controller('modalInstanceCtrl', ['$timeout', '$rootScope', 'saathiService', 'editOpen', 'delOpen', 'delData', '$uibModalInstance', '$filter', 'editData', '$scope', 'catagories', 'subCatagories',
+		function ($timeout, $rootScope, saathiService, editOpen, delOpen, delData, $uibModalInstance, $filter, editData, $scope, catagories, subCatagories) {
 			if (editOpen) {
 				$scope.editDataId = editData.Id;
 				$(function () {
@@ -75,7 +75,8 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 
 				$scope.catagoryOptions = catagories.filter(function (obj) {
 					return obj.catagory !== 'Misc';
-				});;
+				});
+
 				$scope.catagoryOptions.push({ Id: 0, catagory: "Misc" });
 				angular.forEach($scope.catagoryOptions, function (catagory) {
 					if (catagory.catagory == editData.catagory) {
@@ -87,11 +88,38 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 
 					}
 				})
+
+				$scope.subCatagoryOptions = subCatagories.filter(function (data) {
+					if (data.CatagoryId == 0) {
+						return { CatagoryId: 0, Id: 0, catagory: "Misc" }
+					}
+					else {
+						return data.CatagoryId === editData.subCatagoryId;
+					}
+
+				});
+				if ($scope.subCatagoryOptions.length != 1) {
+					$scope.subCatagoryOptions.push({ CatagoryId: 0, Id: 0, catagory: "Misc" });
+				}
+				$scope.editSubCatagory = editData.subCatagoryId;
+
+
+
 				$scope.postDate = $filter('date')(editData.postDate, 'MM/dd/yyyy');;
 				$scope.postedBy = editData.postedBy;
 				$scope.groupName = editData.group;
 				$scope.postUrl = editData.postUrl;
 				catagories = undefined;
+				subCatagories = undefined;
+
+				$scope.changeSubCatagory = function () {
+					saathiService.getSubCatagories().then(function (result) {
+						$scope.subCatagoryOptions = result.data.filter(function (data) {
+							return data.CatagoryId === $scope.editCatagory;
+						});
+						$scope.subCatagoryOptions.push({ CatagoryId: 0, Id: 0, catagory: "Misc" });
+					})
+				}
 
 				$scope.updatePost = function (frm) {
 					var editPost = {};
@@ -99,6 +127,7 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 					editPost.postedBy = $scope.postedBy;
 					editPost.postUrl = $scope.postUrl;
 					editPost.catagory = $scope.editCatagory;
+					editPost.subCatagory = $scope.editSubCatagory;
 					editPost.group = $scope.groupName;
 					editPost.edit = 1;
 					editPost.Id = $scope.editDataId;
@@ -175,10 +204,11 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 		$scope.saathiData = function () {
 			$scope.showLoader = true;
 			$scope.showdata = false;
-			var promises = [saathiService.catagories(), saathiService.getPosts()];
-			$q.all(promises).then(function (response) {				
+			var promises = [saathiService.catagories(), saathiService.getPosts(), saathiService.getSubCatagories()];
+			$q.all(promises).then(function (response) {
 				$scope.dataSaathi.catagories = response[0].data;
 				$scope.viewData = response[1].data;
+				$scope.subCatagories = response[2].data;
 				var filtered = [];
 				for (var i = 0; i < $scope.viewData.length; i++) {
 					if ($scope.viewData[i].catagory == 0) {
@@ -187,6 +217,18 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 						for (var c = 0; c < $scope.dataSaathi.catagories.length; c++) {
 							if ($scope.viewData[i].catagory == $scope.dataSaathi.catagories[c].Id) {
 								$scope.viewData[i].catagory = $scope.dataSaathi.catagories[c].catagory;
+							}
+						}
+					}
+
+					if ($scope.viewData[i].subCatagory == 0) {
+						$scope.viewData[i].subCatagoryId = 0;
+						$scope.viewData[i].subCatagory = 'Misc';
+					} else {
+						for (var c = 0; c < $scope.subCatagories.length; c++) {
+							if ($scope.viewData[i].subCatagory == $scope.subCatagories[c].Id) {
+								$scope.viewData[i].subCatagoryId = $scope.subCatagories[c].CatagoryId;
+								$scope.viewData[i].subCatagory = $scope.subCatagories[c].catagory;
 							}
 						}
 					}
@@ -202,13 +244,22 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 			})
 		}
 
-		$scope.resetFilters = function(){
+		$scope.resetFilters = function () {
 			//$scope.groupSearch = "-1";
 			//$scope.catagorySearch = "-1";
 			//$scope.postedBySearch = "-1";
 		}
+
+		$scope.$watch('dataSaathi.catagory', function (newVal) {
+			if (newVal) {
+				$scope.dataSaathi.subCatagories = $scope.subCatagories.filter(function (data) {
+					return data.CatagoryId === $scope.dataSaathi.catagory;
+				});
+			}
+		});
+
 		$scope.getFilters = function (items) {
-			var options={};
+			var options = {};
 			options.groups = [];
 			options.postedBy = [];
 			for (var i = 0; i < items.length; i++) {
@@ -237,6 +288,7 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 			post.postedBy = $scope.postedBy;
 			post.postUrl = $scope.postUrl;
 			post.catagory = $scope.dataSaathi.catagory;
+			post.subCatagory = $scope.dataSaathi.subCatagory;
 			post.group = $scope.groupName;
 			post.edit = 0;
 			$('#tabs a[href="#Posts"]').tab('show');
@@ -286,6 +338,9 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 					catagories: function () {
 						return $scope.dataSaathi.catagories
 					},
+					subCatagories: function () {
+						return $scope.subCatagories
+					},
 					delData: false,
 					editOpen: true,
 					delOpen: false
@@ -317,12 +372,13 @@ var app = angular.module('saathiApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap'
 					editData: false,
 					catagories: false,
 					delOpen: true,
-					editOpen: false
+					editOpen: false,
+					subCatagories: false
 				}
 			});
 
 			modalDelInstance.result.then(function (selectedItem) {
-				$ctrl.selected = selectedItem;
+				//$ctrl.selected = selectedItem;
 			}, function () {
 			});
 		};
