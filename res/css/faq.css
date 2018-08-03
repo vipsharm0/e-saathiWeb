@@ -1,0 +1,26 @@
+/* Add Faq */
+.faq-Add-Question {
+    padding-top: 40px;
+}
+
+.faq-Add-Question .faq-qaText {
+    resize: none;
+}
+
+.faq-Add-Question .faq-maxwidth{
+    max-width: 50%;
+}
+
+.faq-Add-Question .faq-add-minus{
+    float: left;
+    padding-left: 20px;
+}
+
+/* add faq mobile */
+
+@media only screen and (max-width: 500px) {
+    .faq-Add-Question .faq-maxwidth{
+        max-width: 100%;
+    }
+}
+

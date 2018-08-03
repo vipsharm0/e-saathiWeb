@@ -1,0 +1,28 @@
+<div ng-controller="qsAddController" class="faq-Add-Question">
+    <form class="form-horizontal" name="postQa" ng-submit="submitQa(postQa)" novalidate>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Question:</label>
+            <div class="faq-maxwidth col-sm-10 col-md-3">
+                <textarea class="faq-qaText form-control">
+
+                </textarea>
+            </div>
+            <div class="faq-add-minus">
+                <button class="btn btn-success glyphicon glyphicon-plus" ng-click="addAnswer()"></button>
+            </div>
+            <div class="faq-add-minus">
+                <button class="btn btn-success glyphicon glyphicon-minus" ng-click="removeAnswer($index)"></button>
+            </div>
+        </div>
+
+        <div>
+            <div ng-repeat="ans in answerset.answers track by $index" class="form-group">
+                <label class="control-label col-sm-2" for="email">Answer{{$index + 1}}:</label>
+                <div class="faq-maxwidth col-sm-10 col-md-3">
+                    <textarea class="faq-qaText form-control" ng-model="answerset.answers[$index]"></textarea>
+                </div>
+               
+            </div>           
+        </div>
+    </form>
+</div>
