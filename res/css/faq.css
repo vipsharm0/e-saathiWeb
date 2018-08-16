@@ -7,6 +7,20 @@
     resize: none;
 }
 
+.faq-error {
+    position: absolute;
+    text-align: center;
+    top: 162px;
+    left: 242px;
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.faq-form {
+    position: relative;
+    margin-top: 20px;
+}
 .faq-Add-Question .faq-maxwidth{
     max-width: 50%;
 }
@@ -21,6 +35,10 @@
 @media only screen and (max-width: 500px) {
     .faq-Add-Question .faq-maxwidth{
         max-width: 100%;
+    }
+
+    .faq-error {
+        left: auto;
     }
 }
 

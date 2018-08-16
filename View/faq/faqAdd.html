@@ -1,9 +1,20 @@
 <div ng-controller="qsAddController" class="faq-Add-Question">
-    <form class="form-horizontal" name="postQa" ng-submit="submitQa(postQa)" novalidate>
+    <div class="faq-error">
+                Please enter a question and at least one answer!
+    </div>
+    <form class="form-horizontal faq-form" name="postQa" ng-submit="submitQa(postQa)" novalidate>        
+        <div class="form-group">
+            <label class="control-label col-sm-2">Question catagory</label>
+            <div class="col-sm-10 col-md-3">
+                <select class="form-control" ng-model="answerset.catagoryId" ng-options="item.Id as item.catagory for item in dataSaathi.catagories track by item.Id">
+                    <option value="" selected="selected">Misc</option>
+                </select>
+            </div>
+        </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="email">Question:</label>
             <div class="faq-maxwidth col-sm-10 col-md-3">
-                <textarea class="faq-qaText form-control">
+                <textarea ng-model="answerset.question" class="faq-qaText form-control">
 
                 </textarea>
             </div>
@@ -11,18 +22,23 @@
                 <button class="btn btn-success glyphicon glyphicon-plus" ng-click="addAnswer()"></button>
             </div>
             <div class="faq-add-minus">
-                <button class="btn btn-success glyphicon glyphicon-minus" ng-click="removeAnswer($index)"></button>
+                <button class="btn btn-danger glyphicon glyphicon-minus" ng-click="removeAnswer($index)"></button>
             </div>
         </div>
 
         <div>
             <div ng-repeat="ans in answerset.answers track by $index" class="form-group">
-                <label class="control-label col-sm-2" for="email">Answer{{$index + 1}}:</label>
-                <div class="faq-maxwidth col-sm-10 col-md-3">
+                <label class="control-label col-sm-2" for="email">Answer {{$index + 1}}:</label>
+                <div class="faq-maxwidth col-sm-10 col-md-1">
                     <textarea class="faq-qaText form-control" ng-model="answerset.answers[$index]"></textarea>
                 </div>
-               
-            </div>           
+            </div>
+        </div>
+        <div ng-disabled="true" class="form-group">
+            <div class="col-sm-offset-2 col-sm-10" ng-disabled="postQa.$invalid">
+                <!--<button type="button"  class="btn btn-default addpost-button" ng-click="submitPost()">Submit</button>-->
+                <button type="submit" class="btn btn-success" ng-disabled="qaStatus">Submit</button>
+            </div>
         </div>
     </form>
 </div>
